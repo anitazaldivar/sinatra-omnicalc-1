@@ -8,12 +8,22 @@ get("/") do
   "
 end
 
-get '/square/new' do
+get('/square/new') do
   erb(:new_square_calc)
 end
 
-get '/square/results' do
+get('/square/results') do
   @the_number = params.fetch("number")
   @the_result = params.fetch("number").to_f**2
   erb(:square_results)
+end
+
+get('/square_root/new') do
+  erb(:new_square_root_calc)
+end
+
+get('/square_root/results') do
+  @the_number = params.fetch("user_number")
+  @the_result = @the_number.to_f**0.5
+  erb(:square_root_results)
 end
