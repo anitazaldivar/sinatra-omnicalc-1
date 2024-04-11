@@ -27,3 +27,20 @@ get('/square_root/results') do
   @the_result = @the_number.to_f**0.5
   erb(:square_root_results)
 end
+
+get('/payment/new') do
+  erb(:new_payment)
+end
+
+get('/payment/results') do
+  @the_apr = params.fetch("user_apr")
+  @the_years = params.fetch("user_years")
+  @the_principal = params.fetch("user_pv")
+
+  r = @the_apr.to_f/100/12
+  n = @the_years.to_i*12
+  numerator = r*@the_principal.to_i
+  denominator = (1-(1+r)**(-n))
+  @the_payment = numerator/denominator
+  erb(:payment_results)
+end
