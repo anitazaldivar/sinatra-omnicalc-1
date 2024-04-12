@@ -1,5 +1,6 @@
 require "sinatra"
 require "sinatra/reloader"
+require "active_support/all"
 
 get("/") do
   "
@@ -33,14 +34,16 @@ get('/payment/new') do
 end
 
 get('/payment/results') do
-  @the_apr = params.fetch("user_apr")
+  @the_apr = params.fetch("user_apr").to_f.to_fs(:percentage, { :precision => 4 } )
   @the_years = params.fetch("user_years")
-  @the_principal = params.fetch("user_pv")
+  @the_principal = params.fetch("user_pv").to_f.to_fs(:currency, { :precision => 2 })
 
-  r = @the_apr.to_f/100/12
+  r = params.fetch("user_apr").to_f/100/12
   n = @the_years.to_i*12
-  numerator = r*@the_principal.to_i
+  pv = params.fetch("user_pv").to_i
+  numerator = r*pv
   denominator = (1-(1+r)**(-n))
   @the_payment = numerator/denominator
+  @the_payment = @the_payment.to_f.to_fs(:currency, { :precision => 2 })
   erb(:payment_results)
 end
